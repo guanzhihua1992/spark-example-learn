@@ -43,7 +43,7 @@ object SparkTC {
       println(s"before print tc union with oldCount ${oldCount} nextCount ${nextCount}.")
       tc = tc.union(tc.join(edges).map(x=>(x._2._2, x._2._1))).distinct().cache()
       nextCount = tc.count()
-      
+      println(s"after print tc union with oldCount ${oldCount} nextCount ${nextCount}.")
     }while(nextCount != oldCount)
     println(s"Tc has ${tc.count()} edges.")
     spark.stop()
