@@ -31,10 +31,10 @@ object SparkTC {
     println(graph)
     println(s"before print tc original.")
     var tc = spark.sparkContext.parallelize(graph, slices).cache()
-    tc.collect.foreach(println(_))
+    println(tc.collect.foreach(print))
     println(s"after print tc original.")
     val edges = tc.map(x => (x._2, x._1))
-    println(edges)
+    edges.collect.foreach(print)
 
     var oldCount = 0L
     var nextCount = tc.count()
@@ -43,6 +43,7 @@ object SparkTC {
       println(s"before print tc union with oldCount ${oldCount} nextCount ${nextCount}.")
       tc = tc.union(tc.join(edges).map(x=>(x._2._2, x._2._1))).distinct().cache()
       nextCount = tc.count()
+      println(tc.collect.foreach(print))
       println(s"after print tc union with oldCount ${oldCount} nextCount ${nextCount}.")
     }while(nextCount != oldCount)
     println(s"Tc has ${tc.count()} edges.")
